@@ -114,10 +114,10 @@ After running `cli.BenchmarkRunner`, the algorithm produced the following perfor
 | Comparisons | Also linear with n |
 
 ### Time vs n
-![Time vs n](docs/time_vs_n.png)
+![Time vs n](docs/performance-plots/time_vs_n.png)
 
 ### Comparisons vs n
-![Comparisons vs n](docs/comparisons_vs_n.png)
+![Comparisons vs n](docs/performance-plots/comparisons_vs_n.png)
 
 
 ## Troubleshooting
