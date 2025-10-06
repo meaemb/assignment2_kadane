@@ -1,108 +1,123 @@
 # Kadane’s Algorithm — Maximum Subarray (Java + Maven)
 
-A compact Java implementation of **Kadane’s algorithm** for the maximum subarray problem, with an optional lightweight **performance tracker** to count operations for analysis/comparison.
+A complete Java project implementing **Kadane’s Algorithm** for the Maximum Subarray problem, extended with **optimization**, **metrics tracking**, **CLI interface**, and **testing** support.  
+Built using **Maven** for clean modular structure and reproducible builds.
+
 
 ## Overview
 
-Given an integer array, Kadane’s algorithm finds the contiguous subarray with the maximum possible sum in linear time **O(n)** and constant extra space **O(1)**.  
-This project provides:
+**Kadane’s Algorithm** finds the contiguous subarray with the maximum possible sum in linear time **O(n)** and constant extra space **O(1)**.  
+This repository combines several modules from different branches into one unified project:
 
-- A production-ready `Kadane` class with a simple API.
-- An inner `Subarray` DTO (sum, left, right) for results.
-- An optional `PerformanceTracker` to measure elementary operations during runs.
+- `algorithms/` → Core Kadane implementation
+- `optimization/` → Enhanced version with boundary and memory optimizations
+- `metrics/` → PerformanceTracker for counting comparisons, assignments, and operations
+- `cli/` → Command-line runner for executing and benchmarking algorithms
+- `testing/` → JUnit-based testing suite for validation and coverage
+
 
 ## Project Structure
 
 - pom.xml
+- README.md
 - src/
     - main/
         - java/
             - algorithms/
                 - Kadane.java
+            - optimization/
+                - OptimizedKadane.java
             - metrics/
                 - PerformanceTracker.java
+            - cli/
+                - MainCLI.java
+    - test/
+        - java/
+            - testing/
+                - KadaneTest.java
 
+## Build and Run
 
-> The repository also includes standard files like `.gitignore` and a README placeholder in the root. The primary language is Java. :contentReference[oaicite:0]{index=0}
+- To build:
+  mvn -q clean package
+  
+to run the CLI:
+java -cp target/assignment2_kadane-1.0.jar cli.MainCLI
 
-## Requirements
+Example:
 
-- Java 17+ (or your course’s required JDK)
-- Maven 3.8+ (or the version configured in your environment)
+Enter array elements: -2 1 -3 4 -1 2 1 -5 4
+Maximum subarray sum = 6
+Indices: [3, 6]
 
-## Build
-
-
-mvn -q -e -DskipTests package
-This produces a JAR under target/. If you add a main class later, you can run it with:
-
-java -jar target/<your-jar-name>.jar
-
-### Usage (as a Library)
-Import the classes and call Kadane.maxSubarray(...). You can pass a PerformanceTracker to record operation counts (optional).
-
+## Usage (as a Library)
 import algorithms.Kadane;
 import metrics.PerformanceTracker;
 
 public class Demo {
-    public static void main(String[] args) {
-        int[] a = { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
+public static void main(String[] args) {
+int[] arr = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
 
-        // Without metrics:
-        Kadane.Subarray ans = Kadane.maxSubarray(a);
-        System.out.println(ans); // e.g., Subarray(sum=6, left=3, right=6)
+        // Basic usage
+        Kadane.Subarray result = Kadane.maxSubarray(arr);
+        System.out.println(result);
 
-        // With metrics:
-        PerformanceTracker pt = new PerformanceTracker();
-        Kadane.Subarray ans2 = Kadane.maxSubarray(a, pt);
-        System.out.println(ans2);
-        System.out.println("ops=" + pt.getOps() + ", compares=" + pt.getCompares());
+        // With metrics
+        PerformanceTracker tracker = new PerformanceTracker();
+        Kadane.Subarray tracked = Kadane.maxSubarray(arr, tracker);
+        System.out.println(tracked);
+        System.out.println("Operations: " + tracker.getOps());
     }
 }
-## API
-- Kadane.maxSubarray(int[] a) -> Kadane.Subarray
-Runs Kadane with default settings.
 
-- Kadane.maxSubarray(int[] a, PerformanceTracker pt) -> Kadane.Subarray
-Same as above, additionally recording operations into pt (if non-null).
+## Testing
 
-- Kadane.Subarray 
-  - int sum — maximum subarray sum
-  - int left — start index (inclusive), -1 if array is null/empty
-  - int right — end index (inclusive), -1 if array is null/empty
-  - toString() — formatted summary
+- All tests are stored in:
+  - src/test/java/testing/KadaneTest.java
+- Run tests with:
+  - mvn test
 
-### Notes
-- For null or empty arrays, the implementation returns a neutral Subarray(0, -1, -1).
-- Indices are 0-based and inclusive.
+
+Expected result:
+
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+
+## Features Summary
+
+- Kadane Algorithm — finds the maximum subarray sum in O(n)
+
+- Optimization Module — improved version for negative-only arrays
+
+- Metrics Tracker — counts comparisons, operations, and assignments
+
+- CLI Interface — allows user input from terminal
+
+- JUnit Tests — ensures correctness and reliability
 
 ## Algorithm Summary
-Kadane maintains a running sum of the best subarray ending at position i:
-  - bestEndingHere = max(a[i], bestEndingHere + a[i])
 
+- Core idea:
+  - bestEndingHere = max(a[i], bestEndingHere + a[i])
   - bestSoFar = max(bestSoFar, bestEndingHere)
 
-It also tracks the start/end indices when bestSoFar improves.
-  - Time complexity: O(n)
+- Tracks start and end indices when best sum updates
 
-  - Space complexity: O(1)
+- Returns (0, -1, -1) for empty arrays
 
-## Tests
-If your course requires tests, add them under:
+- Works with both positive and negative numbers
 
-src/test/java/...
-with your preferred framework (e.g., JUnit 5), then run:
+- Time complexity: O(n)
 
-mvn test
+- Space complexity: O(1)
 
-## Extending the Project
-- Negative-only arrays: Current behavior returns (0, -1, -1).
-If your assignment requires choosing the largest negative element, adjust the initialization to start from a[0] and propagate strictly.
+## Performance Metrics
 
-- Indices vs. sums: If you need all optimal segments (ties), keep a list of candidates during traversal.
-
-- Metrics: Extend PerformanceTracker with custom counters (e.g., assignments, array reads/writes).
-
+- Based on runs from the CLI or test suite:
+  - Time grows linearly with input size
+  - Comparisons and assignments also scale linearly 
+- Stored plots (optional):
+  - docs/performance-plots/time_vs_n.png 
+  - docs/performance-plots/comparisons_vs_n.png
 
 ## Performance Results
 
@@ -121,10 +136,34 @@ After running `cli.BenchmarkRunner`, the algorithm produced the following perfor
 
 
 ## Troubleshooting
-- NullPointerException — Ensure you pass a non-null array; or handle (-1, -1) result.
 
-- Maven errors — Verify your JDK (java -version) matches the Maven compiler target in pom.xml.
+- NullPointerException → Check if array is not null
+
+- Maven build errors → Verify Java 17+ and correct pom.xml
+
+- Classpath issues → Use full path when running JAR (-cp target/...)
 
 
 ## Acknowledgments
-Classic Kadane’s algorithm (maximum subarray) taught in most Algorithms courses; this implementation is aligned for coursework and performance tracking.
+
+Developed for the Design and Analysis of Algorithms course.
+Implements clean code, modular design, and performance tracking principles.
+
+## Related Branches
+
+master — final integrated version
+
+feature/algorithm — core implementation
+
+feature/optimization — improved performance version
+
+feature/metrics — operation counter
+
+feature/cli — command-line interface
+
+feature/testing — unit tests
+
+Author: Makhanbetiyar Begina
+Repository: assignment2_kadane
+
+

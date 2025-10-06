@@ -20,4 +20,16 @@ public final class PerformanceTracker {
         return n + "," + run + "," + sum + "," + l + "," + r + ","
                 + comparisons + "," + arrayAccesses + "," + assignments + "," + branches + "," + bytesAllocated + "," + timeUs;
     }
+
+    // === Additional getters for CLI ===
+    public long getOps() {
+        // Общее количество операций (пример: сложим все типы)
+        return comparisons + arrayAccesses + assignments + branches;
+    }
+
+    public long getCompares() {
+        // Только количество сравнений
+        return comparisons;
+    }
+
 }
